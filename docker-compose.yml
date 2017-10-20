@@ -1,0 +1,13 @@
+version: '3'
+services:
+  backend:
+    image: me/backend
+    build:
+      context: backend
+    volumes:
+      - ./data/public:/usr/src/app/public
+  frontend:
+    image: traefik:alpine
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/acme:/etc/traefik/acme
