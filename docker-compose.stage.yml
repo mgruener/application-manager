@@ -1,0 +1,29 @@
+version: '3'
+services:
+  backend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=backend"
+      - "traefik.frontend.rule=Host:swiss-dev.that.cloud"
+  frontend:
+    ports:
+     - "127.0.0.1:8080:8080"
+     - "80:80"
+     - "443:443"
+    command:
+      - "traefik"
+      - "--docker=true"
+      - "--docker.exposedbydefault=false"
+      - "--web=true"
+      - "--web.address=:8080"
+      - "--web.readonly=true"
+      - "--defaultentrypoints=http"
+      - "--defaultentrypoints=https"
+      - "--entryPoints=Name:http Address::80 Redirect.EntryPoint:https"
+      - "--entryPoints=Name:https Address::443 tls"
+      - "--acme=true"
+      - "--acme.email=michael.gruener@chaosmoon.net"
+      - "--acme.entrypoint=https"
+      - "--acme.storage=/etc/traefik/acme/acme.json"
+      - "--acme.onhostrule=true"
+      - "--acme.ondemand=true"
