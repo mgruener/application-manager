@@ -1,13 +1,15 @@
 version: '3'
 services:
   backend:
-    image: me/backend
+    image: backend
     build:
       context: backend
     volumes:
       - ./data/public:/usr/src/app/public
+    restart: unless-stopped
   frontend:
     image: traefik:alpine
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./data/acme:/etc/traefik/acme
+    restart: unless-stopped
