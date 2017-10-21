@@ -1,6 +1,6 @@
-import app
+import application_manager
 
-runtime = app.create_app()
+app = application_manager.create_app()
 
 if __name__ == "__main__":
-    runtime.run()
+    app.run()
