@@ -1,34 +1,28 @@
-# Welcome to the Flask-Bootstrap sample application. This will give you a
-# guided tour around creating an application using Flask-Bootstrap.
-#
-# To run this application yourself, please install its requirements first:
-#
-#   $ pip install -r sample_app/requirements.txt
-#
-# Then, you can actually run the application.
-#
-#   $ flask --app=sample_app dev
-#
-# Afterwards, point your browser to http://localhost:5000, then check out the
-# source.
-
 from flask import Flask
-from flask_appconfig import AppConfig
 from flask_bootstrap import Bootstrap
 
 from .frontend import frontend
 from .nav import nav
+from .oauth import oauth
 
+import json
+import os
 
-def create_app(configfile=None):
+class Config(object):
+    with open(os.environ['APPMAN_SETTINGS']) as data_file:
+        data = json.load(data_file)
+    for key in data:
+        locals()[key] = data[key]
+
+def create_app():
     # We are using the "Application Factory"-pattern here, which is described
     # in detail inside the Flask docs:
     # http://flask.pocoo.org/docs/patterns/appfactories/
 
     app = Flask(__name__)
 
-    # We use Flask-Appconfig here, but this is not a requirement
-    AppConfig(app)
+    #app.config.from_envvar('APPMAN_SETTINGS')
+    app.config.from_object('application_manager.Config')
 
     # Install our Bootstrap extension
     Bootstrap(app)
@@ -44,5 +38,22 @@ def create_app(configfile=None):
 
     # We initialize the navigation as well
     nav.init_app(app)
+
+    oauth.init_app(app)
+
+    oauth.remote_app(
+        'auth0',
+        consumer_key=app.config['AUTH0_CONSUMER_KEY'],
+        consumer_secret=app.config['AUTH0_CONSUMER_SECRET'],
+        request_token_params={
+            'scope': 'openid profile',
+            'audience': 'https://' + app.config['AUTH0_BASEURL'] + '/userinfo'
+        },
+        base_url='https://%s' % app.config['AUTH0_BASEURL'],
+        access_token_method='POST',
+        access_token_url='/oauth/token',
+        authorize_url='/authorize',
+    )
+
 
     return app

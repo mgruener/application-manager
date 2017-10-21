@@ -1,4 +1,7 @@
-flask-appconfig>=0.10
+#flask-appconfig>=0.10
 flask-bootstrap
 flask-nav
 flask-wtf
+flask-oauthlib
+requests
+python-jose

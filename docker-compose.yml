@@ -1,11 +1,14 @@
 version: '3'
 services:
   application-manager:
+    environment:
+      - APPMAN_SETTINGS=/etc/appman_settings.json
     image: application-manager
     build:
       context: application-manager
     volumes:
       - ./data/public:/usr/src/app/public
+      - ./data/appman_settings.json:/etc/appman_settings.json:ro
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
