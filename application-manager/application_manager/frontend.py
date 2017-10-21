@@ -30,7 +30,7 @@ frontend = Blueprint('frontend', __name__)
 # We're adding a navbar as well through flask-navbar. In our example, the
 # navbar has an usual amount of Link-Elements, more commonly you will have a
 # lot more View instances.
-nav.register_element('frontend_top', Navbar(
+nav.register_element('frontend_top_auth', Navbar(
     View('Application Manager', '.index'),
     View('Home', '.index'),
     View('Forms Example', '.example_form'),
@@ -47,6 +47,10 @@ nav.register_element('frontend_top', Navbar(
         Link('Customize', 'http://getbootstrap.com/customize/'), ),
     View('Logout','.logout'),
     Text('Using Flask-Bootstrap {}'.format(FLASK_BOOTSTRAP_VERSION)), ))
+
+nav.register_element('frontend_top_unauth', Navbar(
+    View('Application Manager', '.index'),
+    View('Login', '.login')))
 
 # disable ssl verification because urllib somehow has problems with wildcard
 # certificates
@@ -68,7 +72,9 @@ def requires_auth(f):
 # "templates/index.html" documentation for more details.
 @frontend.route('/')
 def index():
-    return render_template('index.html')
+    if 'profile' not in session:
+        return render_template('index_unauth.html')
+    return render_template('index_auth.html')
 
 
 # Shows a long signup form, demonstrating form rendering.
@@ -114,7 +120,7 @@ def callback_handling():
         'picture': payload['picture']
     }
 
-    return redirect('/example-form')
+    return redirect('/')
 
 @frontend.route('/login')
 def login():

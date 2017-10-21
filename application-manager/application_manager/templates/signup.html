@@ -2,6 +2,10 @@
 
 {%- extends "base.html" %}
 
+{# Finally, round things out with navigation #}
+{% block navbar %}
+{{nav.frontend_top_auth.render()}}
+{% endblock %}
 
 {% block content %}
    <div class="container">
