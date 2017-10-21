@@ -1,19 +1,5 @@
 version: '3'
 services:
-  backend:
+  application-manager:
     labels:
-      - "traefik.enable=true"
-      - "traefik.backend=backend"
       - "traefik.frontend.rule=Host:localhost"
-  frontend:
-    ports:
-      - "80:80"
-      - "8080:8080"
-    command:
-      - "traefik"
-      - "--docker=true"
-      - "--docker.exposedbydefault=false"
-      - "--web=true"
-      - "--web.address=:8080"
-      - "--defaultentrypoints=http"
-      - "--entryPoints=Name:http Address::80"

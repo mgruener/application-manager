@@ -1,15 +1,17 @@
 version: '3'
 services:
-  backend:
-    image: backend
+  application-manager:
+    image: application-manager
     build:
-      context: backend
+      context: application-manager
     volumes:
       - ./data/public:/usr/src/app/public
     restart: unless-stopped
-  frontend:
-    image: traefik:alpine
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./data/acme:/etc/traefik/acme
-    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=backend"
+
+networks:
+  default:
+    external:
+      name: ingress_network
