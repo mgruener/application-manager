@@ -4,7 +4,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.backend=backend"
-      - "traefik.frontend.rule=Host:swiss.that.cloud"
+      - "traefik.frontend.rule=Host:apply.with.that.cloud"
   frontend:
     ports:
      - "127.0.0.1:8080:8080"
